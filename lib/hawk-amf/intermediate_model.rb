@@ -1,4 +1,4 @@
-module Rails3AMF
+module HawkAMF
   class IntermediateModel
     TRAIT_CACHE = {}
 
@@ -15,7 +15,7 @@ module Rails3AMF
         unless traits = TRAIT_CACHE[@model.class]
           # Auto-map class name if enabled
           class_name = RocketAMF::ClassMapper.get_as_class_name(@model)
-          if Rails3AMF::Configuration.auto_class_mapping && class_name.nil?
+          if HawkAMF::Configuration.auto_class_mapping && class_name.nil?
             class_name = @model.class.name
             RocketAMF::ClassMapper.define {|m| m.map :as => class_name, :rb => class_name}
           end

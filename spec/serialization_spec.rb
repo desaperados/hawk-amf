@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 require 'active_record'
 
-describe Rails3AMF::Serialization do
+describe HawkAMF::Serialization do
   before :all do
     # If we replace columns, we don't need a DB connection - YEAH!!!
     class User < ActiveRecord::Base
@@ -40,7 +40,7 @@ describe Rails3AMF::Serialization do
       end
     end
 
-    class Rails3AMF::IntermediateModel
+    class HawkAMF::IntermediateModel
       attr_accessor :model, :props
     end
   end
@@ -57,19 +57,19 @@ describe Rails3AMF::Serialization do
     @user.stub!(:courses).and_return([Course.new(:name => "science")])
 
     # Resets
-    Rails3AMF::IntermediateModel::TRAIT_CACHE.clear
-    @config = Rails3AMF::Configuration.new
+    HawkAMF::IntermediateModel::TRAIT_CACHE.clear
+    @config = HawkAMF::Configuration.new
   end
 
   it "should serialize to intermediate form" do
     intermediate = @model.to_amf
-    intermediate.should be_a(Rails3AMF::IntermediateModel)
+    intermediate.should be_a(HawkAMF::IntermediateModel)
     intermediate.model.should == @model
     intermediate.props.should == {"username" => "user", "password" => "pass"}
   end
 
   it "should encode to amf properly if not yet in intermediate form" do
-    @model.should_receive(:to_amf).and_return(mock(Rails3AMF::IntermediateModel, :encode_amf => "success"))
+    @model.should_receive(:to_amf).and_return(mock(HawkAMF::IntermediateModel, :encode_amf => "success"))
     result = @model.encode_amf(mock("Serializer", :version => 3))
     result.should == "success"
   end
@@ -78,18 +78,18 @@ describe Rails3AMF::Serialization do
     intermediate = @user.to_amf :include => "courses"
     courses = intermediate.props["courses"]
     courses.length.should == 1
-    courses[0].should be_a(Rails3AMF::IntermediateModel)
+    courses[0].should be_a(HawkAMF::IntermediateModel)
   end
 
   it "should automap classes when enabled" do
     @config.auto_class_mapping = true
 
     result = @model.encode_amf(mock("Serializer", :version => 3, :write_object => nil))
-    traits = Rails3AMF::IntermediateModel::TRAIT_CACHE[@model.class]
+    traits = HawkAMF::IntermediateModel::TRAIT_CACHE[@model.class]
     traits[:class_name].should == "AMTest"
 
     RocketAMF::ClassMapper.reset
-    Rails3AMF::Configuration.reset
+    HawkAMF::Configuration.reset
   end
 
   it "should not re-map defined classes" do
@@ -97,11 +97,11 @@ describe Rails3AMF::Serialization do
     RocketAMF::ClassMapper.define {|m| m.map :as => "Changed", :ruby => "AMTest"}
 
     result = @model.encode_amf(mock("Serializer", :version => 3, :write_object => nil))
-    traits = Rails3AMF::IntermediateModel::TRAIT_CACHE[@model.class]
+    traits = HawkAMF::IntermediateModel::TRAIT_CACHE[@model.class]
     traits[:class_name].should == "Changed"
 
     RocketAMF::ClassMapper.reset
-    Rails3AMF::Configuration.reset
+    HawkAMF::Configuration.reset
   end
 
   it "should encode to AMF0 properly" do
@@ -124,7 +124,7 @@ describe Rails3AMF::Serialization do
     fixture = File.open(File.dirname(__FILE__) + '/fixtures/amf3-ar.dat').read
     fixture.force_encoding("ASCII-8BIT") if fixture.respond_to?(:force_encoding)
     output.should == fixture
-    Rails3AMF::IntermediateModel::TRAIT_CACHE.length.should == 2
+    HawkAMF::IntermediateModel::TRAIT_CACHE.length.should == 2
 
     RocketAMF::ClassMapper.reset
   end

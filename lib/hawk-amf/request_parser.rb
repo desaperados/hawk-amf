@@ -1,4 +1,4 @@
-module Rails3AMF
+module HawkAMF
   class RequestParser
     def initialize app, config={}, logger=nil
       @app = app
@@ -15,16 +15,16 @@ module Rails3AMF
 
       # Wrap request and response
       env['rack.input'].rewind
-      env['rails3amf.request'] = RocketAMF::Envelope.new.populate_from_stream(env['rack.input'].read)
-      env['rails3amf.response'] = RocketAMF::Envelope.new
+      env['hawkamf.request'] = RocketAMF::Envelope.new.populate_from_stream(env['rack.input'].read)
+      env['hawkamf.response'] = RocketAMF::Envelope.new
 
       # Pass up the chain to the request processor, or whatever is layered in between
       result = @app.call(env)
 
       # Calculate length and return response
-      if env['rails3amf.response'].constructed?
+      if env['hawkamf.response'].constructed?
         @logger.info "Sending back AMF"
-        response = env['rails3amf.response'].to_s
+        response = env['hawkamf.response'].to_s
         return [200, {"Content-Type" => Mime::AMF.to_s, 'Content-Length' => response.length.to_s}, [response]]
       else
         return result

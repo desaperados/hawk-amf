@@ -1,7 +1,7 @@
 require 'active_model'
-require 'rails3-amf/intermediate_model'
+require 'hawk-amf/intermediate_model'
 
-module Rails3AMF
+module HawkAMF
   module Serialization
     # Control the serialization of the model by specifying the relations, properties,
     # methods, and other data to serialize with the model. Parameters take the
@@ -24,7 +24,7 @@ module Rails3AMF
       end
 
       # Create wrapper and return
-      Rails3AMF::IntermediateModel.new(self, props)
+      HawkAMF::IntermediateModel.new(self, props)
     end
 
     # Called by serialization routines if the user did not use to_amf to convert
@@ -38,7 +38,7 @@ end
 
 # Hook into any object that includes ActiveModel::Serialization
 module ActiveModel::Serialization
-  include Rails3AMF::Serialization
+  include HawkAMF::Serialization
 end
 
 # Make ActiveSupport times serialize properly

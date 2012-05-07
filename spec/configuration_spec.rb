@@ -1,8 +1,8 @@
 require 'spec_helper.rb'
 
-describe Rails3AMF::Configuration do
+describe HawkAMF::Configuration do
   before :each do
-    @config = Rails3AMF::Configuration.new
+    @config = HawkAMF::Configuration.new
   end
 
   it "should default gateway_path to '/amf'" do

@@ -1,6 +1,6 @@
 require 'active_support/dependencies'
 
-module Rails3AMF
+module HawkAMF
   class RequestProcessor
     def initialize app, config={}, logger=nil
       @app = app
@@ -12,11 +12,11 @@ module Rails3AMF
     # rails controllers. No middleware beyond the request processor will receive
     # anything if the request is a handleable AMF request.
     def call env
-      return @app.call(env) unless env['rails3amf.response']
+      return @app.call(env) unless env['hawkamf.response']
 
       # Handle each method call
-      req = env['rails3amf.request']
-      res = env['rails3amf.response']
+      req = env['hawkamf.request']
+      res = env['hawkamf.response']
       res.each_method_call req do |method, args|
         begin
           handle_method method, args, env

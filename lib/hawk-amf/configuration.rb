@@ -1,4 +1,4 @@
-module Rails3AMF
+module HawkAMF
   class Configuration
     class << self
       def populate config
@@ -6,7 +6,7 @@ module Rails3AMF
       end
 
       def reset
-        Rails3AMF::Configuration.new
+        HawkAMF::Configuration.new
       end
 
       def method_missing name, *args
@@ -22,7 +22,7 @@ module Rails3AMF
       @param_mappings = {}
 
       # Make config available globally
-      Rails3AMF::Configuration.populate self
+      HawkAMF::Configuration.populate self
     end
 
     def class_mapping &block

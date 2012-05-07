@@ -1,1 +1,0 @@
-require 'rails3-amf/railtie'

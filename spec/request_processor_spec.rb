@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-describe Rails3AMF::RequestProcessor do
+describe HawkAMF::RequestProcessor do
   class FakeController
     def self.controller_name; 'fake'; end
     def self.action_methods; ['get_user']; end
@@ -14,11 +14,11 @@ describe Rails3AMF::RequestProcessor do
 
   before :each do
     @mock_next = mock("Middleware")
-    @config = Rails3AMF::Configuration.new
-    @app = Rails3AMF::RequestProcessor.new(@mock_next, @config, Logger.new(nil))
+    @config = HawkAMF::Configuration.new
+    @app = HawkAMF::RequestProcessor.new(@mock_next, @config, Logger.new(nil))
     @env = {
-      'rails3amf.request' => RocketAMF::Envelope.new(:amf_version => 3),
-      'rails3amf.response' => RocketAMF::Envelope.new,
+      'hawkamf.request' => RocketAMF::Envelope.new(:amf_version => 3),
+      'hawkamf.response' => RocketAMF::Envelope.new,
       'rack.input' => StringIO.new
     }
   end
@@ -51,15 +51,15 @@ describe Rails3AMF::RequestProcessor do
   end
 
   it "should handle AMF request" do
-    @env['rails3amf.request'].messages << RocketAMF::Message.new('FakeController.get_user', '/1', [])
+    @env['hawkamf.request'].messages << RocketAMF::Message.new('FakeController.get_user', '/1', [])
     @app.should_receive(:get_service).with('FakeController', 'get_user').and_return(FakeController)
     @app.call(@env)
-    @env['rails3amf.response'].constructed?.should be_true
-    @env['rails3amf.response'].messages[0].data.should == "it worked"
+    @env['hawkamf.response'].constructed?.should be_true
+    @env['hawkamf.response'].messages[0].data.should == "it worked"
   end
 
   it "should handle errors in controller properly" do
-    @env['rails3amf.request'].messages << RocketAMF::Message.new('FakeController.get_user', '/1', [])
+    @env['hawkamf.request'].messages << RocketAMF::Message.new('FakeController.get_user', '/1', [])
     @app.should_receive(:get_service).with('FakeController', 'get_user').and_return(FakeController)
     c = mock FakeController
     c.stub!(:dispatch) { raise "die" }
@@ -67,7 +67,7 @@ describe Rails3AMF::RequestProcessor do
 
     @app.call(@env)
 
-    res_msg = @env['rails3amf.response'].messages[0]
+    res_msg = @env['hawkamf.response'].messages[0]
     res_msg.data.should be_a(RocketAMF::Values::ErrorMessage)
     res_msg.data.faultString.should == "die"
   end

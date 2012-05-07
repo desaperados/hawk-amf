@@ -1,20 +1,14 @@
-Rails3-amf is a Rails 3 plugin that aims to do what RubyAMF did for Rails 2. It
-provides extensively customizable ActiveRecord serialization support, simple
-configuration, and allows AMF calls to any controller you choose. It uses
-RocketAMF for serialization, providing users with a proven AMF0/3 serializer and
-deserializer. Because of this, it's also fully Ruby 1.9 compatible out of the
-box.
+Hawk-amf - rails3-amf fork - work in progress. 
 
 
 == GETTING STARTED:
 
-To get started with rails3-amf, all you need to do is add the following two
-lines to your gemfile. RocketAMF will need to be pulled from git for now, as
+RocketAMF will need to be pulled from git for now, as
 there are several necessary updates that have been made to it to allow
-rails3-amf to work properly.
+hawk-amf to work properly.
 
   gem 'RocketAMF', :git => 'git://github.com/warhammerkid/rocket-amf.git'
-  gem 'rails3-amf', :git => 'git://github.com/warhammerkid/rails3-amf.git'
+  gem 'hawk-amf', :git => 'git://github.com/desaperados/hawk-amf.git'
 
 Then, make sure that your controller will respond to amf by adding <tt>:amf</tt>
 to your respond_to, and you should be all ready to go with an AMF gateway
@@ -37,15 +31,14 @@ ActiveModel serialization.
 
 == CONFIGURATION:
 
-Rails3-amf has several configuration options. The gateway path, which defaults
-to "/amf" can be changed to anything you choose. You can map method call
-arguments by index to named params in your controllers. Finally, there's the
-ability to specify flash->ruby class name mappings.
+The gateway path, which defaults to "/amf" can be changed to anything you choose. 
+You can map method call arguments by index to named params in your controllers. 
+Finally, there's the ability to specify flash->ruby class name mappings.
 
 Example:
 
-  config.rails3amf.gateway_path = "/rubyamf/gateway"
-  config.rails3amf.class_mapping do |m|
+  config.hawkamf.gateway_path = "/rubyamf/gateway"
+  config.hawkamf.class_mapping do |m|
     m.map :as => 'Test::User', :ruby => 'User'
     m.map :as => 'vo.Course', :ruby => 'Course'
   end

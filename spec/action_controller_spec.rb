@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-describe "Rails3AMF actionpack additions" do
+describe "HawkAMF actionpack additions" do
   it "should have AMF mime type" do
     Mime::AMF.to_s.should == "application/x-amf"
   end

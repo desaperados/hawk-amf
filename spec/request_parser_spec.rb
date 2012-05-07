@@ -1,10 +1,10 @@
 require 'spec_helper.rb'
 
-describe Rails3AMF::RequestParser do
+describe HawkAMF::RequestParser do
   before :each do
     @mock_next = mock("Middleware")
-    @config = Rails3AMF::Configuration.new
-    @app = Rails3AMF::RequestParser.new(@mock_next, @config, Logger.new(nil))
+    @config = HawkAMF::Configuration.new
+    @app = HawkAMF::RequestParser.new(@mock_next, @config, Logger.new(nil))
     @env = {
       'PATH_INFO' => '/amf',
       'CONTENT_TYPE' => Mime::AMF.to_s,
@@ -33,7 +33,7 @@ describe Rails3AMF::RequestParser do
   end
 
   it "should serialize to AMF if the response is constructed" do
-    @mock_next.stub!(:call) {|env| env['rails3amf.response'].should_receive('constructed?').and_return(true)}
+    @mock_next.stub!(:call) {|env| env['hawkamf.response'].should_receive('constructed?').and_return(true)}
     response = @app.call(@env)
     response[1]["Content-Type"].should == Mime::AMF
   end
