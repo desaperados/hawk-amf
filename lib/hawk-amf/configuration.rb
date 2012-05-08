@@ -17,7 +17,8 @@ module HawkAMF
     def initialize
       @data = {
         :gateway_path => "/amf",
-        :auto_class_mapping => false
+        :auto_class_mapping => false,
+        :use_array_collection => true
       }
       @param_mappings = {}
 

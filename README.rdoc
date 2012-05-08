@@ -8,7 +8,7 @@ there are several necessary updates that have been made to it to allow
 hawk-amf to work properly.
 
   gem 'RocketAMF', :git => 'git://github.com/warhammerkid/rocket-amf.git'
-  gem 'hawk-amf', :git => 'git://github.com/desaperados/hawk-amf.git'
+  gem 'hawk-amf', :git => 'git@bitbucket.org:trifecta/gem.hawk-amf.git'
 
 Then, make sure that your controller will respond to amf by adding <tt>:amf</tt>
 to your respond_to, and you should be all ready to go with an AMF gateway
