@@ -46,6 +46,13 @@ module HawkAMF
       res = con.dispatch(method_name, req)
       return con.amf_response
     end
+    
+    def case_translator
+      lambda do |injected, pair|
+        key = pair[0].to_s.underscore
+        injected[key] = pair[1]; injected
+       end
+    end
 
     def get_service controller_name, method_name
       # Check controller and validate against hacking attempts
@@ -69,6 +76,9 @@ module HawkAMF
       params = {}
       args.each_with_index {|obj, i| params[i] = obj}
       params.merge!(@config.mapped_params(controller_name, method_name, args))
+      if params[0].is_a? Hash
+        params[0] = params[0].inject({}, &case_translator)
+      end
       params
     end
   end
