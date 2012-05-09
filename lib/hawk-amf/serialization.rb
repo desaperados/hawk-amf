@@ -43,9 +43,16 @@ module HawkAMF
           props[association] = records.is_a?(Enumerable) ? records.map { |r| r.to_amf(opts) } : records.to_amf(opts)
         end
       end
-
+      
+      # Translate attribute names to camelcase
+      props = props.inject({}, &case_translator)
+      
       # Create wrapper and return
       HawkAMF::IntermediateModel.new(self, props)
+    end
+    
+    def case_translator
+      lambda {|injected, pair| injected[pair[0].to_s.camelize(:lower)] = pair[1]; injected}
     end
 
     # Called by serialization routines if the user did not use to_amf to convert
