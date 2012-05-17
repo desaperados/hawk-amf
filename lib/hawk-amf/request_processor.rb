@@ -43,6 +43,7 @@ module HawkAMF
 
       # Run it
       con = controller.new
+      con.instance_variable_set("@is_amf", true)
       res = con.dispatch(method_name, req)
       return con.amf_response
     end

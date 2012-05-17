@@ -13,3 +13,15 @@ module ActionController
     end
   end
 end
+
+module HawkAMF
+  # Rails controller extensions to access AMF information.
+  module Controller
+
+    # Returns whether or not the request is an AMF request
+    def is_amf?
+      @is_amf == true
+    end
+    alias_method :is_amf, :is_amf?
+  end
+end

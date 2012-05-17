@@ -7,6 +7,8 @@ require 'hawk-amf/configuration'
 require 'hawk-amf/request_parser'
 require 'hawk-amf/request_processor'
 
+ActionController::Base.send(:include, HawkAMF::Controller)
+
 module HawkAMF
   class Railtie < Rails::Railtie
     config.hawkamf = HawkAMF::Configuration.new
