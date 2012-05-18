@@ -89,11 +89,11 @@ module ActiveModel::Serialization
 end
 
 # Make ActiveSupport times serialize properly
-# class ActiveSupport::TimeWithZone
-#   def encode_amf serializer
-#     serializer.serialize self.to_datetime
-#   end
-# end
+class ActiveSupport::TimeWithZone
+  def encode_amf serializer
+    serializer.serialize 3, self.to_datetime
+  end
+end
 
 # Map array to_amf calls to each element
 class Array
