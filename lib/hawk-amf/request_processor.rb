@@ -74,12 +74,14 @@ module HawkAMF
     end
 
     def build_params controller_name, method_name, args
+      ::Rails.logger.debug "[HawkAMF] building params"
       params = {}
       args.each_with_index {|obj, i| params[i] = obj}
       params.merge!(@config.mapped_params(controller_name, method_name, args))
       if params[0].is_a? Hash
         params[0] = params[0].inject({}, &case_translator)
       end
+      ::Rails.logger.debug params.inspect
       params
     end
   end

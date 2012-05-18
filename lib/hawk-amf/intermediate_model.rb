@@ -14,7 +14,10 @@ module HawkAMF
         # Use traits to reduce overhead
         unless traits = TRAIT_CACHE[@model.class]
           # Auto-map class name if enabled
-          class_name = RocketAMF::ClassMapper.get_as_class_name(@model)
+          class_name = RocketAMF::ClassMapper.new.get_as_class_name(@model)
+          
+          ::Rails.logger.debug "[HawkAMF::IntermediateModel] Ruby Class: #{@model.class.name} AS Class: #{class_name}"
+          
           if HawkAMF::Configuration.auto_class_mapping && class_name.nil?
             class_name = @model.class.name
             RocketAMF::ClassMapper.define {|m| m.map :as => class_name, :rb => class_name}
@@ -30,7 +33,14 @@ module HawkAMF
           }
           TRAIT_CACHE[@model.class] = traits
         end
-        serializer.write_object @model, @props, traits
+        ::Rails.logger.debug "[RocketAMF] serializing #{@model.class.name}"
+        begin
+          serializer.write_object @model, @props, traits
+        rescue Exception => e
+          # Log and re-raise exception
+          ::Rails.logger.error e.to_s+"\n"+e.backtrace.join("\n")
+          raise e
+        end
       end
     end
   end

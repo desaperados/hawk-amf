@@ -18,7 +18,8 @@ module HawkAMF
       @data = {
         :gateway_path => "/amf",
         :auto_class_mapping => false,
-        :use_array_collection => true
+        :use_array_collection => true,
+        :translate_case => true
       }
       @param_mappings = {}
 

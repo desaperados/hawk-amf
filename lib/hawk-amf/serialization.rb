@@ -61,7 +61,9 @@ module HawkAMF
       end
       
       # Translate attribute names to camelcase
-      props = props.inject({}, &case_translator)
+      if HawkAMF::Configuration.translate_case
+        props = props.inject({}, &case_translator)
+      end
       
       # Create wrapper and return
       HawkAMF::IntermediateModel.new(self, props)
@@ -75,6 +77,7 @@ module HawkAMF
     # to an intermediate form prior to serialization. Encodes using the default
     # serialization settings.
     def encode_amf serializer
+      ::Rails.logger.debug "[HawkAMF] using default encode_amf method -----------"
       self.to_amf.encode_amf serializer
     end
   end
@@ -86,11 +89,11 @@ module ActiveModel::Serialization
 end
 
 # Make ActiveSupport times serialize properly
-class ActiveSupport::TimeWithZone
-  def encode_amf serializer
-    serializer.serialize self.to_datetime
-  end
-end
+# class ActiveSupport::TimeWithZone
+#   def encode_amf serializer
+#     serializer.serialize self.to_datetime
+#   end
+# end
 
 # Map array to_amf calls to each element
 class Array

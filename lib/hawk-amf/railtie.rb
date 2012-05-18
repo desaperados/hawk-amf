@@ -11,10 +11,12 @@ ActionController::Base.send(:include, HawkAMF::Controller)
 
 module HawkAMF
   class Railtie < Rails::Railtie
+    
     config.hawkamf = HawkAMF::Configuration.new
     
     initializer "rubyamf.configured" do
       RocketAMF::ClassMapper.use_array_collection = HawkAMF::Configuration.use_array_collection
+      RocketAMF::ClassMapper.translate_case = HawkAMF::Configuration.translate_case
     end
 
     initializer "hawkamf.middleware" do
