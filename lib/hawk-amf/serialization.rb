@@ -4,6 +4,7 @@ require 'hawk-amf/deprecated'
 
 module HawkAMF
   module Serialization
+    
     mattr_accessor :new_record
     
     def self.included base #:nodoc:
@@ -13,14 +14,11 @@ module HawkAMF
     # Flex sends new object with id set to zero. Overriding internals of save
     # to handle this
     def create_or_update
-      run_callbacks(:save)
-      if self.id.to_i.zero?
+      if self.id.is_a?(Numeric) && self.id.to_i.zero?
         self.id = nil
-        result = create
-      else
-        result = update
+        @new_record = true
       end
-      result != false
+      super
     end
     
     # Control the serialization of the model by specifying the relations, properties,
@@ -39,10 +37,6 @@ module HawkAMF
 
       # Create props hash and serialize relations if supported method available
       props = serializable_hash(options)
-      
-      if props[:id].to_i.zero?
-        self.new_record = true
-      end
       
       ::Rails.logger.debug "[HawkAMF] #{self.class} - to_amf ------------------"
       ::Rails.logger.debug props.inspect
