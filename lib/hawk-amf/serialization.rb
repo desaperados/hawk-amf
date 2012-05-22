@@ -13,12 +13,14 @@ module HawkAMF
     # Flex sends new object with id set to zero. Overriding internals of save
     # to handle this
     def create_or_update
+      run_callbacks(:save)
       if self.id.to_i.zero?
         self.id = nil
-        create
+        result = create
       else
-        update
+        result = update
       end
+      result != false
     end
     
     # Control the serialization of the model by specifying the relations, properties,
