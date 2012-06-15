@@ -28,6 +28,7 @@ module HawkAMF
     end
 
     def class_mapping &block
+      RocketAMF::ClassMapper.define {|m| m.map :as => "mx.rpc.Fault", :ruby => "FaultObject"}
       RocketAMF::ClassMapper.define(&block)
     end
 
