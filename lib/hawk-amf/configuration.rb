@@ -28,7 +28,6 @@ module HawkAMF
     end
 
     def class_mapping &block
-      RocketAMF::ClassMapper.define {|m| m.map :as => "flex.messaging.messages.ErrorMessage", :ruby => "FaultObject"}
       RocketAMF::ClassMapper.define(&block)
     end
 

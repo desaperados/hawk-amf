@@ -6,7 +6,7 @@ require 'hawk-amf/action_controller'
 require 'hawk-amf/configuration'
 require 'hawk-amf/request_parser'
 require 'hawk-amf/request_processor'
-require 'hawk-amf/fault_object'
+require 'hawk-amf/fault'
 
 ActionController::Base.send(:include, HawkAMF::Controller)
 
