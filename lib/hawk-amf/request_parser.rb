@@ -15,9 +15,16 @@ module HawkAMF
 
       # Wrap request and response
       env['rack.input'].rewind
-      env['hawkamf.request'] = RocketAMF::Envelope.new.populate_from_stream(env['rack.input'].read)
+      
+      # Catch any errors thrown during RocketAMF Envelope construction
+      begin
+        env['hawkamf.request'] = RocketAMF::Envelope.new.populate_from_stream(env['rack.input'].read)
+      rescue Exception => e
+        handle_serialization_failure(e)
+      end
+      
       env['hawkamf.response'] = RocketAMF::Envelope.new
-
+      
       # Pass up the chain to the request processor, or whatever is layered in between
       result = @app.call(env)
 
@@ -25,10 +32,17 @@ module HawkAMF
       if env['hawkamf.response'].constructed?
         @logger.info "Sending back AMF"
         response = env['hawkamf.response'].to_s
-        return [200, {"Content-Type" => Mime::AMF.to_s, 'Content-Length' => response.length.to_s}, [response]]
+        env['hawkamf.response_status'] ||= 200
+        return [env['hawkamf.response_status'], {"Content-Type" => Mime::AMF.to_s, 'Content-Length' => response.length.to_s}, [response]]
       else
         return result
       end
+    end
+    
+    def handle_serialization_failure(exception)
+      @logger.error exception
+      response = exception.message.to_s
+      return [400, {"Content-Type" => "text/plain", 'Content-Length' => response.length.to_s}, [response]]
     end
 
     # Check if we should handle it based on the environment
