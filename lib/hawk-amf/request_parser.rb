@@ -32,8 +32,7 @@ module HawkAMF
       if env['hawkamf.response'].constructed?
         @logger.info "Sending back AMF"
         response = env['hawkamf.response'].to_s
-        env['hawkamf.response_status'] ||= 200
-        return [env['hawkamf.response_status'], {"Content-Type" => Mime::AMF.to_s, 'Content-Length' => response.length.to_s}, [response]]
+        return [200, {"Content-Type" => Mime::AMF.to_s, 'Content-Length' => response.length.to_s}, [response]]
       else
         return result
       end

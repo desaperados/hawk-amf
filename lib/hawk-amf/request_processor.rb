@@ -45,7 +45,6 @@ module HawkAMF
       con = controller.new
       con.instance_variable_set("@is_amf", true)
       res = con.dispatch(method_name, req)
-      env['hawkamf.response_status'] = con.status
       return con.amf_response
     end
     
