@@ -7,7 +7,7 @@ module ActionController
     attr_reader :amf_response
 
     add :amf do |amf, options|
-      @amf_response = amf
+      @amf_response = amf.is_a?(ActiveRecord::Relation) ? amf.to_a : amf
       self.content_type ||= Mime::AMF
       self.response_body = " "
     end
